@@ -63,10 +63,10 @@ int main()
                             scanf("%s", client.prenom);
                             printf("Veuillez saisir votre nom: ");
                             scanf("%s", client.nom);
-                            sprintf(client.email,"%s.%s@gmail.com", client.prenom, client.nom);
-                            printf("Votre email généré est : %s\n", client.email);
+                            sprintf(client.email,"%s.%s@client.com", client.prenom, client.nom);
+                            printf("Votre email genere est : %s\n", client.email);
                             client.idClient = 0;
-                            client.solde = 100;
+                            client.solde = 0.00;
                             break;
                      case 2:
                             
@@ -74,7 +74,7 @@ int main()
                             scanf("%s", client.prenom);
                             printf("Veuillez entrer votre nouveau nom : ");
                             scanf("%s", client.nom);     
-                            sprintf(client.email, "%s.%s@gmail.com", client.prenom, client.nom);
+                            sprintf(client.email, "%s.%s@client.com", client.prenom, client.nom);
                             printf("Le profil est mis a jour.\n");
                             printf("Pour confirmation, votre email est : %s\n", client.email);
                      case 3:
@@ -82,6 +82,7 @@ int main()
                             printf(" Nom : %s\n", client.nom);
                             printf(" Prenom : %s\n", client.prenom);   
                             printf(" Email : %s\n", client.email); 
+                            printf("Solde actuel  :%f MAD\n:",client.solde);
                             
                             break;
                      default:
