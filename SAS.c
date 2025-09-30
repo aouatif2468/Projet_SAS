@@ -16,7 +16,7 @@ typedef struct Produit
        char categorie[30];
        float prix;
        int stock;
-       char description[100]; // tableau de caractères
+       char description[100];
 } Produit;
 
 typedef struct Date
@@ -63,7 +63,8 @@ int main()
                             scanf("%s", client.prenom);
                             printf("Veuillez saisir votre nom: ");
                             scanf("%s", client.nom);
-                            printf("%s.%s@gmail.com", client.prenom, client.nom);
+                            sprintf(client.email,"%s.%s@gmail.com", client.prenom, client.nom);
+                            printf("Votre email généré est : %s\n", client.email);
                             client.idClient = 0;
                             client.solde = 100;
                             break;
@@ -73,14 +74,15 @@ int main()
                             scanf("%s", client.prenom);
                             printf("Veuillez entrer votre nouveau nom : ");
                             scanf("%s", client.nom);     
-                            printf("Le profil est mis a jour.");
-                            printf(" Pour la confirmation, votre email est  %s.%s@gmail.com", client.prenom, client.nom);
-                            break;
+                            sprintf(client.email, "%s.%s@gmail.com", client.prenom, client.nom);
+                            printf("Le profil est mis a jour.\n");
+                            printf("Pour confirmation, votre email est : %s\n", client.email);
                      case 3:
-                            printf("les informations de client sont: \n");
+                            printf("les informations du client sont: \n");
                             printf(" Nom : %s\n", client.nom);
                             printf(" Prenom : %s\n", client.prenom);   
-                            printf(" Email : %s\n", client.email);   
+                            printf(" Email : %s\n", client.email); 
+                            
                             break;
                      default:
                             printf("Retour au menu principal.\n");
