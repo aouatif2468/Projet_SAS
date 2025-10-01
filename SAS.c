@@ -14,6 +14,8 @@ typedef struct Client
        char email[TAILLE_EMAIL];
        float solde;
        int profilCree;
+       int achatsEffectues;
+       float totalDepense;
 } Client;
 
 typedef struct Produit
@@ -43,11 +45,10 @@ Client gererProfil(Client client)
               {
               case 1:
                      printf("Veuillez saisir votre prenom : ");
-                     scanf("%s", client.prenom);
+                     scanf(" %[^\n]", client.prenom);
                      printf("Veuillez saisir votre nom: ");
-                     scanf("%s", client.nom);
+                     scanf(" %[^\n]", client.nom);
                      sprintf(client.email, "%s.%s@client.com", client.prenom, client.nom);
-                     printf("Votre email genere est : %s\n", client.email);
                      client.idClient = 1;
                      client.solde = 0.00;
                      client.profilCree = 1;
@@ -64,7 +65,6 @@ Client gererProfil(Client client)
                             scanf("%s", client.nom);
                             sprintf(client.email, "%s.%s@client.com", client.prenom, client.nom);
                             printf("Le profil est mis a jour.\n");
-                            printf("Pour confirmation, votre email est : %s\n", client.email);
                      }
                      break;
 
@@ -82,6 +82,7 @@ Client gererProfil(Client client)
                      break;
 
               case 0:
+                     printf("Retour sur le menu principal");
                      break;
 
               default:
@@ -136,6 +137,7 @@ Client gererSolde(Client client)
                      break;
 
               case 0:
+                     printf("Retour sur le menu principal");
                      break;
 
               default:
@@ -185,16 +187,16 @@ void rechercherProduit(Produit produits[], int n)
 
 void TriProduit(Produit produits[], int n)
 {
-       int Tmp;
+       Produit Tmp;
        for (int i = 0; i < n - 1; i++)
        {
               for (int j = 0; j < n - 1 - i; j++)
               {
                      if (produits[j].prix > produits[j + 1].prix)
                      {
-                            Tmp = produits[j].prix;
-                            produits[j].prix = produits[j + 1].prix;
-                            produits[j + 1].prix = Tmp;
+                            Tmp = produits[j];
+                            produits[j] = produits[j + 1];
+                            produits[j + 1] = Tmp;
                      }
               }
        }
@@ -233,7 +235,7 @@ void consultationProduits(Produit produits[], int n)
                      rechercherProduit(produits, n);
                      break;
               case 3:
-                    TriProduit(produits, n);
+                     TriProduit(produits, n);
 
               case 0:
                      break;
@@ -244,7 +246,75 @@ void consultationProduits(Produit produits[], int n)
               }
        } while (choixConsultation != 0);
 }
+Client effectuerAchat(Client client, Produit produits[], int n){
+    if(!client.profilCree){
+        printf("Veuillez creer votre profil avant d'acheter.\n");
+        return client;
+    }
 
+    afficherCatalogue(produits,n);
+    int idProduit, quantite, index=-1;
+    printf("Entrez l'ID du produit a acheter : ");
+    scanf("%d", &idProduit);
+
+    for(int i=0; i<n; i++){
+        if(produits[i].idProduit == idProduit){
+            index = i;
+            break;
+        }
+    }
+
+    if(index == -1){
+        printf("Produit introuvable.\n");
+        return client;
+    }
+
+    printf("Entrez la quantite : ");
+    scanf("%d", &quantite);
+    if(quantite <= 0){
+        printf("Quantite invalide.\n");
+        return client;
+    }
+
+    if(produits[index].stock < quantite){
+        printf("Stock insuffisant ! Stock disponible : %d\n", produits[index].stock);
+        return client;
+    }
+
+    float total = produits[index].prix * quantite;
+    if(client.solde < total){
+        printf("Solde insuffisant ! Votre solde : %.2f MAD, prix total : %.2f MAD\n", client.solde, total);
+        return client;
+    }
+
+    client.solde -= total;
+    produits[index].stock -= quantite;
+    client.achatsEffectues++;
+    client.totalDepense += total;
+
+    printf("Achat effectue avec succes !\nProduit : %s\nQuantite : %d\nMontant debite : %.2f MAD\nSolde restant : %.2f MAD\n",
+        produits[index].nom, quantite, total, client.solde);
+
+    return client;
+}
+  
+// Affichage statistiques
+void afficherStatistiques(Client client, Produit produits[], int n) {
+    if (!client.profilCree) {
+        printf("Veuillez creer un profil d'abord.\n");
+        return;
+    }
+
+    printf("\n************* STATISTIQUES *************\n");
+    printf("Client : %s %s\n", client.prenom, client.nom);
+    printf("Solde actuel : %.2f MAD\n", client.solde);
+
+    printf("\nProduits restants dans le stock :\n");
+    for (int i = 0; i < n; i++) {
+        printf("- %s : %d en stock\n", produits[i].nom, produits[i].stock);
+    }
+    printf("****************************************\n");
+}
 int main()
 {
        int choixMenu;
@@ -284,13 +354,12 @@ int main()
                      break;
 
               case 4:
-                     printf("Effectuer un achat \n");
+                     client = effectuerAchat(client, produits, N_PRODUITS);
                      break;
 
               case 5:
-                     printf("Mes statistiques \n");
-                     break;
-
+    afficherStatistiques(client, produits, N_PRODUITS);
+    break;
               case 0:
                      printf("Quitter l'application.\n");
                      break;
