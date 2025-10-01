@@ -92,7 +92,28 @@ int main()
                      break;
 
               case 2:
-                     printf("Gestion du solde virtuel \n");
+                     printf("Consultation du solde \n");
+                     printf("Dépôt d'argent  \n");
+                     printf("Vérification automatique \n");
+
+                     switch (choixProfil)
+                     {
+                     case 1:
+
+                            printf("G \n");
+                            break;
+                     case 2:
+                     printf("G \n");
+                            
+                     case 3:
+                            
+                            break;
+                     default:
+                            printf("Retour au menu principal.\n");
+                            break;
+                     }
+                     break;
+
                      break;
               case 3:
                      printf("Consultation des produits \n");
