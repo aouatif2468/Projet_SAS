@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
 #define TAILLE 30
 #define TAILLE_EMAIL 50
@@ -76,6 +77,10 @@ Client gererProfil(Client client)
                             printf("Les informations du client sont: \n");
                             printf(" Nom : %s\n", client.nom);
                             printf(" Prenom : %s\n", client.prenom);
+                           
+                            for (int i = 0; client.email[i] != '\0'; i++) {
+                             client.email[i] = tolower(client.email[i]);
+                            }
                             printf(" Email : %s\n", client.email);
                             printf(" Solde actuel : %.2f MAD\n", client.solde);
                      }
@@ -247,6 +252,9 @@ void consultationProduits(Produit produits[], int n)
        } while (choixConsultation != 0);
 }
 Client effectuerAchat(Client client, Produit produits[], int n){
+       client.achatsEffectues = 0;
+       client.totalDepense = 0.0;
+
     if(!client.profilCree){
         printf("Veuillez creer votre profil avant d'acheter.\n");
         return client;
@@ -289,7 +297,7 @@ Client effectuerAchat(Client client, Produit produits[], int n){
 
     client.solde -= total;
     produits[index].stock -= quantite;
-    client.achatsEffectues++;
+    client.achatsEffectues++; //c est t dire utiisateur fait une achat
     client.totalDepense += total;
 
     printf("Achat effectue avec succes !\nProduit : %s\nQuantite : %d\nMontant debite : %.2f MAD\nSolde restant : %.2f MAD\n",
@@ -311,7 +319,7 @@ void afficherStatistiques(Client client, Produit produits[], int n) {
 
     printf("\nProduits restants dans le stock :\n");
     for (int i = 0; i < n; i++) {
-        printf("- %s : %d en stock\n", produits[i].nom, produits[i].stock);
+        printf("- %s : %d en stock\n", produits[i].nom, produits[i].stock, produits[i].prix);
     }
     printf("****************************************\n");
 }
